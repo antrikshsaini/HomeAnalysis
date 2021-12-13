@@ -30,7 +30,7 @@ var obj: {
 const TableData: React.FC<{ id: string }> = ({ id }) => {
   const [data, setData] = useState([obj]);
   const [isLoaded, setIsLoaded] = useState(false);
-  console.log("tableData 33", id);
+
   useEffect(() => {
     async function fetchData() {
       const req = await axios.get(`http://localhost:5000/devices/${id}`);
@@ -39,40 +39,42 @@ const TableData: React.FC<{ id: string }> = ({ id }) => {
     }
     fetchData();
   }, [id]);
-  console.log("tableData 42", data);
+
   return (
     <div className="TableData">
-      <h1>Table</h1>
       {isLoaded && (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Device_Name</TableCell>
-                <TableCell align="right">Device_ID</TableCell>
-                <TableCell align="right">Device_Type</TableCell>
-                <TableCell align="right">DateTime</TableCell>
-                <TableCell align="right">Wattage</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((row) => (
-                <TableRow
-                  key={row.DateTime}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {row.Device_Name}
-                  </TableCell>
-                  <TableCell align="right">{row.Device_ID}</TableCell>
-                  <TableCell align="right">{row.Device_Type}</TableCell>
-                  <TableCell align="right">{row.DateTime}</TableCell>
-                  <TableCell align="right">{row.Wattage}</TableCell>
+        <div className="table_container">
+          <h3 className="table_heading">Device Name : {data[0].Device_Name}</h3>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Device_Name</TableCell>
+                  <TableCell align="right">Device_ID</TableCell>
+                  <TableCell align="right">Device_Type</TableCell>
+                  <TableCell align="right">DateTime</TableCell>
+                  <TableCell align="right">Wattage</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {data.map((row) => (
+                  <TableRow
+                    key={row.DateTime}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {row.Device_Name}
+                    </TableCell>
+                    <TableCell align="right">{row.Device_ID}</TableCell>
+                    <TableCell align="right">{row.Device_Type}</TableCell>
+                    <TableCell align="right">{row.DateTime}</TableCell>
+                    <TableCell align="right">{row.Wattage}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
       )}
       {!isLoaded && <div>Please Select a Device</div>}
     </div>

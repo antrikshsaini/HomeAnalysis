@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -7,6 +6,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import "../components/DropDown.css";
 import TableData from "./TableData";
 import Chart from "./Chart";
+import { Grid } from "@mui/material";
 var axios = require("axios").default;
 
 var obj: { Device_ID: string; Device_Name: string } = {
@@ -30,10 +30,17 @@ const DropDown: React.FC = () => {
   const handleChange = (event: SelectChangeEvent) => {
     setDeviceId(event.target.value as string);
   };
-  return (
-    <div className="DropDown">
-      {isLoaded && (
-        <div className="wrapper">
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  } else if (isLoaded && deviceId) {
+    return (
+      <Grid container spacing={1}>
+        <Grid item xs={12} md={6} lg={4}>
+          <h3 className="dropDown_info">
+            Please Select Particular device from the List
+          </h3>
+        </Grid>
+        <Grid item xs={12} md={6} lg={8}>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Device Name</InputLabel>
             <Select
@@ -44,20 +51,50 @@ const DropDown: React.FC = () => {
               onChange={handleChange}
             >
               {data.map((item) => {
-                // console.log(item.Device_Name);
                 return (
                   <MenuItem value={item.Device_ID}>{item.Device_Name}</MenuItem>
                 );
               })}
             </Select>
           </FormControl>
+        </Grid>
+        <Grid item xs={12}>
           <Chart id={deviceId} />
+        </Grid>
+        <Grid item xs={12}>
           <TableData id={deviceId} />
-        </div>
-      )}
-      {!isLoaded && <div>Loading...</div>}
-    </div>
-  );
+        </Grid>
+      </Grid>
+    );
+  } else {
+    return (
+      <Grid container spacing={1}>
+        <Grid item xs={12} md={6} lg={4}>
+          <h3 className="dropDown_info">
+            Please Select Particular device from the List
+          </h3>
+        </Grid>
+        <Grid item xs={12} md={6} lg={8}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Device Name</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={deviceId}
+              label="Device Name"
+              onChange={handleChange}
+            >
+              {data.map((item) => {
+                return (
+                  <MenuItem value={item.Device_ID}>{item.Device_Name}</MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
+    );
+  }
 };
 
 export default DropDown;

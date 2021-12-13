@@ -1,6 +1,15 @@
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  XAxis,
+  YAxis,
+  Legend,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import "../components/Chart.css";
 var axios = require("axios").default;
 
@@ -47,32 +56,35 @@ const Chart: React.FC<{ id: string }> = ({ id }) => {
   }, [id]);
 
   const DateFormatter = (date: moment.MomentInput) => {
-    // return moment(date).unix();
-    return moment(date).format("MM/YYYY HH:mm");
+    return moment(date).format("29 MMMM HH:mm");
   };
 
   return (
     <div className="chart">
-      <h1>Readings Visualization using Line Chart</h1>
       {isLoaded && (
-        <LineChart width={1400} height={500} data={data}>
-          <Line
-            type="monotone"
-            dataKey="Wattage"
-            stroke="black"
-            strokeWidth={2}
-            dot={false}
-          />
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey={"DateTime"}
-            domain={[data[0].DateTime, data[data.length - 1].DateTime]}
-            scale="time"
-            type="number"
-            tickFormatter={DateFormatter}
-          />
-          <YAxis type="number" domain={[0, 2000]} />
-        </LineChart>
+        <ResponsiveContainer width="100%" height={350}>
+          <LineChart data={data}>
+            <Tooltip labelFormatter={DateFormatter} />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="Wattage"
+              stroke="#8884d8"
+              strokeWidth={1}
+              dot={false}
+            />
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey={"DateTime"}
+              domain={[data[0].DateTime, data[data.length - 1].DateTime]}
+              scale="time"
+              type="number"
+              height={10}
+              tickFormatter={DateFormatter}
+            />
+            <YAxis type="number" domain={[0, 3000]} />
+          </LineChart>
+        </ResponsiveContainer>
       )}
       {!isLoaded && <div>Chart is loading</div>}
     </div>
